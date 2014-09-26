@@ -21,7 +21,7 @@ uint32_t fh32_finalize(fh_u64_t h);
 /* convinient function to hash buffer with 32bit seed */
 uint32_t fh32_string_hash(const void *buf, size_t len, uint32_t seed);
 /* convinient function to hash buffer with 64bit seed */
-uint32_t fh32_string_hash(const void *buf, size_t len, uint32_t seed1, uint32_t seed2);
+uint32_t fh32_string_hash2(const void *buf, size_t len, uint32_t seed1, uint32_t seed2);
 
 /* 128bit state for 64bit result */
 typedef ... fh_u128_t;
@@ -34,5 +34,5 @@ uint64_t fh64_finalize(fh_u128_t h);
 /* convinient function to hash buffer with 64bit seed */
 uint64_t fh64_string_hash(const void *buf, size_t len, uint64_t seed);
 /* convinient function to hash buffer with 128bit seed */
-uint64_t fh64_string_hash(const void *buf, size_t len, uint64_t seed1, uint64_t seed2);
+uint64_t fh64_string_hash2(const void *buf, size_t len, uint64_t seed1, uint64_t seed2);
 ````
