@@ -31,7 +31,7 @@ fh32_permute(fh_u64_t h, uint32_t v)
 }
 
 static inline uint32_t
-fh_load_u32(const u8 *v, unsigned len)
+fh_load_u32(const uint8_t *v, unsigned len)
 {
 	uint32_t x = 0;
 	switch(len) {
@@ -113,7 +113,7 @@ fh64_permute(fh_u128_t h, uint64_t v)
 }
 
 static inline uint64_t
-fh_load_u64(const u8 *v, unsigned len)
+fh_load_u64(const uint8_t *v, unsigned len)
 {
 	uint64_t x = 0;
 	switch(len) {
