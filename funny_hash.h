@@ -90,6 +90,14 @@ fh32_string_hash(const void* d, size_t len, uint32_t seed)
 	return fh32_finalize(v);
 }
 
+static inline uint32_t
+fh32_string_hash2(const void* d, size_t len, uint32_t seed1, uint32_t seed2)
+{
+	fh_u64_t v = {seed1, seed2 ^ len};
+	v = fh32_permute_string(v, (const uint8_t*)d, len);
+	return fh32_finalize(v);
+}
+
 typedef struct fh_u128s {
 	uint64_t a, b;
 } fh_u128_t;
@@ -171,6 +179,14 @@ static inline uint64_t
 fh64_string_hash(const void* d, size_t len, uint64_t seed)
 {
 	fh_u128_t v = {seed, seed ^ len};
+	v = fh64_permute_string(v, (const uint8_t*)d, len);
+	return fh64_finalize(v);
+}
+
+static inline uint64_t
+fh64_string_hash2(const void* d, size_t len, uint64_t seed1, uint64_t seed2)
+{
+	fh_u128_t v = {seed1, seed2 ^ len};
 	v = fh64_permute_string(v, (const uint8_t*)d, len);
 	return fh64_finalize(v);
 }
