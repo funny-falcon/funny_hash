@@ -188,6 +188,7 @@ fh_load_u64(const uint8_t *v, unsigned len)
 static inline fh_u128_t
 fh64_permute_string(fh_u128_t h, const uint8_t *v, size_t len)
 {
+	uint64_t t;
 	size_t n = len / 8;
 	for(; n; n--, v+=8) {
 #if FH_READ_UNALIGNED
@@ -199,7 +200,7 @@ fh64_permute_string(fh_u128_t h, const uint8_t *v, size_t len)
 		fh64_permute_imp(&h.a, &h.b, fh_load_u64(v, 8));
 #endif
 	}
-	uint64_t t = (uint64_t)len << 56;
+	t = (uint64_t)len << 56;
 	t |= fh_load_u64(v, len & 7);
 	h.a--;
 	fh64_permute_imp(&h.a, &h.b, t);
