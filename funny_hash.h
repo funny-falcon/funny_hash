@@ -60,18 +60,14 @@ fh32_permute_string(fh_u64_t h, const uint8_t *v, size_t len)
 #endif
 	}
 	t = (uint32_t)len << 24;
-	switch(len & 3) {
-	case 3: t |= fh_load_u32(v, 3); break;
-	case 2: t |= fh_load_u32(v, 2); break;
-	case 1: t |= fh_load_u32(v, 1); break;
-	}
+	t |= fh_load_u32(v, len & 3);
 	h.a--; /* fight against length extension */
 	h = fh32_permute(h, t);
 	return h;
 }
 
 
-static uint32_t
+static inline uint32_t
 fh32_finalize(fh_u64_t h)
 {
 	fh_u64_t t;
@@ -150,15 +146,7 @@ fh64_permute_string(fh_u128_t h, const uint8_t *v, size_t len)
 #endif
 	}
 	uint64_t t = (uint64_t)len << 56;
-	switch(len & 7) {
-	case 7: t |= fh_load_u64(v, 7); break;
-	case 6: t |= fh_load_u64(v, 6); break;
-	case 5: t |= fh_load_u64(v, 5); break;
-	case 4: t |= fh_load_u64(v, 4); break;
-	case 3: t |= fh_load_u64(v, 3); break;
-	case 2: t |= fh_load_u64(v, 2); break;
-	case 1: t |= fh_load_u64(v, 1); break;
-	}
+	t |= fh_load_u64(v, len & 7);
 	h.a--; /* fight against length extension */
 	h = fh64_permute(h, t);
 	return h;
