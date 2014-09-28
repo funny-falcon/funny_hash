@@ -22,11 +22,8 @@ struct by_piece {
 };
 static inline int
 step(struct by_piece *p, size_t max, size_t limit) {
-	p->off += !p->cnt * p->len;
-	if (p->cnt == 0) {
-		p->cnt = 5;
-	}
-	p->cnt--;
+	p->off += p->cnt * p->len;
+	p->cnt ^= 1;
 	p->gen = p->gen * 5 + 1;
 	p->len = p->gen % max + 1;
 	if (p->len > limit - p->off) p->len = limit - p->off;
