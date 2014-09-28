@@ -3,9 +3,12 @@ funny_hash
 
 Simple multiplicative hash function like Murmur3 but a bit safer.
 
-It is safer cause it uses state twice larger than block size.
-It is not cryptographic, but I think it is safe for use in a hash tables with secret seed
-(so that no seed nor result hash is known to attacker - Murmur3 were collision unsafe even in this case).
+It is safer cause it uses state twice larger than block size, feeds block twice at time and every bit affects at least 10/20 bits of a state. So it is impossible to revert change without introducing other change, and I think it is hardly possible to make seed independent collisions (which is the main defect of Murmur2/Murmur3).
+
+So it is safe for use in a internal hash table implementations when nor seed nor hashsum is known to attacker.
+
+(but it is certainly not cryptographic: I think attack with choosen plaintext and known hashsum will succeed
+with little effort)
 
 There is two boxes of building blocks: 32bit hash for 32bit cpu and 64bit hash for 64bit cpu.
 
