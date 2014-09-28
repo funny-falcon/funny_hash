@@ -11,6 +11,7 @@
 #include <sys/time.h>
 
 #include "funny_hash.h"
+#include "others/MurmurHash3.h"
 
 struct by_piece {
 	size_t off;
@@ -31,7 +32,7 @@ static inline int step(struct by_piece *p, size_t max, size_t limit) {
 	return p->off < limit;
 }
 
-static const char *kinds[] = {"funny32", "funny64"};
+static const char *kinds[] = {"funny32", "funny64", "murmur32", "murmur128"};
 static const char *chunks[] = {"piece", "whole"};
 #define arcnt(a) (sizeof(a)/ sizeof(a[0]))
 int main(int argc, char **argv)
@@ -102,6 +103,28 @@ int main(int argc, char **argv)
 				res = fh64_string_hash(src, stat.st_size, res);
 		}
 		printf("hash: %08x%08x\n", (uint32_t)(res>>32), (uint32_t)res);
+	} else if (kind == 2) { /* murmur32 */
+		uint32_t res = 0;
+		if (chunk == 0) { /* by piece */
+			while (step(&bp, 20, stat.st_size)) {
+				MurmurHash3_x86_32(src+bp.off, bp.len, res, &res);
+			}
+		} else {
+			for(i = 0; i < 10; i++)
+				MurmurHash3_x86_32(src, stat.st_size, res, &res);
+		}
+		printf("hash: %08x\n", res);
+	} else if (kind == 3) { /* murmur128 as 64 */
+		uint64_t res[2] = {0, 0};
+		if (chunk == 0) { /* by piece */
+			while (step(&bp, 20, stat.st_size)) {
+				MurmurHash3_x64_128(src+bp.off, bp.len, res[0]^res[1], res);
+			}
+		} else {
+			for(i = 0; i < 10; i++)
+				MurmurHash3_x64_128(src, stat.st_size, res[0]^res[1], res);
+		}
+		printf("hash: %08x%08x\n", (uint32_t)(res[0]>>32), (uint32_t)res[0]);
 	}
 	if (gettimeofday(&tstop, NULL) == -1) {
 		printf("gettimeofday(): %s\n", strerror(errno));
