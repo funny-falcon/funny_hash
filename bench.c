@@ -152,7 +152,7 @@ int main(int argc, char **argv)
 			for(i = 0; i < 10; i++)
 				r.kkey[0] = siphash13(src, stat.st_size, r.key);
 		}
-		printf("hash: %08x%08x\n", (uint32_t)(r.kkey[0]>>32), (uint32_t)r.kkey[0]);
+		printf("hash: %08x%08x", (uint32_t)(r.kkey[0]>>32), (uint32_t)r.kkey[0]);
 	}
 	if (gettimeofday(&tstop, NULL) == -1) {
 		printf("gettimeofday(): %s\n", strerror(errno));
