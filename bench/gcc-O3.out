@@ -1,0 +1,30 @@
+sh run_bench.sh ./bench_nat
+./bench_nat funny32 piece :	hash: adf4adfb		time: 1.727834
+./bench_nat funny32 whole :	hash: 14ad7ae8		time: 2.581754
+./bench_nat funny64 piece :	hash: ae4479b8dd072a75	time: 2.138964
+./bench_nat funny64 whole :	hash: ce5675f728667e53	time: 1.282550
+./bench_nat murmur32 piece :	hash: 5bf9f16a		time: 2.015833
+./bench_nat murmur32 whole :	hash: 1c38545e		time: 2.149988
+./bench_nat murmur128 piece :	hash: 4cd1924d296619d8	time: 2.501643
+./bench_nat murmur128 whole :	hash: 506cc5433dbd390f	time: 1.102888
+./bench_nat sip24 piece :	hash: 4896e425c61fa13c	time: 3.764057
+./bench_nat sip24 whole :	hash: 21cc951f557b7c6e	time: 3.432194
+./bench_nat sip13 piece :	hash: d2c6126c85e3efae	time: 3.190703
+./bench_nat sip13 whole :	hash: da91824489a39921	time: 1.872304
+./bench_nat lookup3 piece :	hash: e679a998		time: 2.325240
+./bench_nat lookup3 whole :	hash: 692aa6ba		time: 2.940081
+sh run_bench.sh ./bench_32
+./bench_32 funny32 piece :	hash: adf4adfb		time: 1.861746
+./bench_32 funny32 whole :	hash: 14ad7ae8		time: 2.392747
+./bench_32 funny64 piece :	hash: ae4479b8dd072a75	time: 3.398721
+./bench_32 funny64 whole :	hash: ce5675f728667e53	time: 3.837779
+./bench_32 murmur32 piece :	hash: 5bf9f16a		time: 2.141934
+./bench_32 murmur32 whole :	hash: 1c38545e		time: 2.179921
+./bench_32 murmur128 piece :	hash: 4cd1924d296619d8	time: 4.589093
+./bench_32 murmur128 whole :	hash: 506cc5433dbd390f	time: 4.365267
+./bench_32 sip24 piece :	hash: 4896e425c61fa13c	time: 8.758353
+./bench_32 sip24 whole :	hash: 21cc951f557b7c6e	time: 12.416772
+./bench_32 sip13 piece :	hash: d2c6126c85e3efae	time: 6.688465
+./bench_32 sip13 whole :	hash: da91824489a39921	time: 6.676550
+./bench_32 lookup3 piece :	hash: e679a998		time: 2.285859
+./bench_32 lookup3 whole :	hash: 692aa6ba		time: 2.877144
