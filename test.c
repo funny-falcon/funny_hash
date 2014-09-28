@@ -108,11 +108,11 @@ int main(int argc, char **argv)
 		uint32_t res = 0;
 		if (chunk == 0) { /* by piece */
 			while (step(&bp, 20, stat.st_size)) {
-				MurmurHash3_x86_32(src+bp.off, bp.len, res, &res);
+				res = MurmurHash3_x86_32(src+bp.off, bp.len, res);
 			}
 		} else {
 			for(i = 0; i < 10; i++)
-				MurmurHash3_x86_32(src, stat.st_size, res, &res);
+				res = MurmurHash3_x86_32(src, stat.st_size, res);
 		}
 		printf("hash: %08x\n", res);
 	} else if (kind == 3) { /* murmur128 as 64 */
