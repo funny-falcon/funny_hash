@@ -28,19 +28,8 @@
 #else	// defined(_MSC_VER)
 
 #define	FORCE_INLINE inline __attribute__((always_inline))
-
-static inline uint32_t rotl32 ( uint32_t x, int8_t r )
-{
-  return (x << r) | (x >> (32 - r));
-}
-
-static inline uint64_t rotl64 ( uint64_t x, int8_t r )
-{
-  return (x << r) | (x >> (64 - r));
-}
-
-#define	ROTL32(x,y)	rotl32(x,y)
-#define ROTL64(x,y)	rotl64(x,y)
+#define ROTL32(x, y) ((x << y) | (x >> (32 - y)))
+#define ROTL64(x, y) ((x << y) | (x >> (64 - y)))
 
 #define BIG_CONSTANT(x) (x##LLU)
 
@@ -50,15 +39,8 @@ static inline uint64_t rotl64 ( uint64_t x, int8_t r )
 // Block read - if your platform needs to do endian-swapping or can only
 // handle aligned reads, do the conversion here
 
-static FORCE_INLINE uint32_t getblock32 ( const uint32_t * p, int i )
-{
-  return p[i];
-}
-
-static FORCE_INLINE uint64_t getblock64 ( const uint64_t * p, int i )
-{
-  return p[i];
-}
+#define getblock32(p, i) ((p)[i])
+#define getblock64(p, i) ((p)[i])
 
 //-----------------------------------------------------------------------------
 // Finalization mix - force all bits of a hash block to avalanche
