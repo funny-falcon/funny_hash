@@ -52,13 +52,24 @@ static inline uint64_t  fh64_string_hash2(const void *buf, size_t len, uint64_t 
 
 static const uint32_t FH_C1 = 0xb8b34b2d;
 static const uint32_t FH_C2 = 0x52c6a5d9;
+/* this function is cause of clang:
+ *     on x86_64 it tries to pack fh_u64_t in one 64bit register and work on it.
+ * gcc does no such mistake */
+static inline void
+fh32_permute_imp(uint32_t *a, uint32_t *b, uint32_t v)
+{
+	*a ^= v;
+	*b = FH_ROTL(*b, 16);
+	*a = FH_ROTL(*a, 16) * FH_C1;
+	*b = (*b ^ v) * FH_C2;
+}
+
 static inline fh_u64_t
 fh32_permute(fh_u64_t h, uint32_t v)
 {
-	fh_u64_t t;
-	t.a = FH_ROTL(h.a ^ v, 16) * FH_C1;
-	t.b = (FH_ROTL(h.b, 16) ^ v) * FH_C2;
-	return t;
+	h.a = FH_ROTL(h.a ^ v, 16) * FH_C1;
+	h.b = (FH_ROTL(h.b, 16) ^ v) * FH_C2;
+	return h;
 }
 
 static inline uint32_t
@@ -85,15 +96,18 @@ fh32_permute_string(fh_u64_t h, const uint8_t *v, size_t len)
 	size_t n = len / 4;
 	for(; n; n--, v+=4) {
 #if FH_READ_UNALIGNED
+		/* clang did something really strange on x86_64 if it were written as
 		h = fh32_permute(h, *(uint32_t*)v);
+		*/
+		fh32_permute_imp(&h.a, &h.b, *(uint32_t*)v);
 #else
-		h = fh32_permute(h, fh_load_u32(v, 4));
+		fh32_permute_imp(&h.a, &h.b, fh_load_u32(v, 4));
 #endif
 	}
 	t = (uint32_t)len << 24;
 	t |= fh_load_u32(v, len & 3);
-	h.a--; /* fight against length extension */
-	h = fh32_permute(h, t);
+	h.a--;
+	fh32_permute_imp(&h.a, &h.b, t);
 	return h;
 }
 
@@ -127,13 +141,22 @@ fh32_string_hash2(const void* d, size_t len, uint32_t seed1, uint32_t seed2)
 
 static const uint64_t FH_BC1 = U64_CONSTANT(0xacd5ad43274593b9);
 static const uint64_t FH_BC2 = U64_CONSTANT(0x6956abd6ed558e3d);
+/* it looks like clang is not as good at instruction reordering as gcc */
+static inline void
+fh64_permute_imp(uint64_t *a, uint64_t *b, uint64_t v)
+{
+	*a ^= v;
+	*b = FH_ROTL(*b, 32);
+	*a = FH_ROTL(*a, 32) * FH_BC1;
+	*b = (*b ^ v) * FH_BC2;
+}
+
 static inline fh_u128_t
 fh64_permute(fh_u128_t h, uint64_t v)
 {
-	fh_u128_t t;
-	t.a = FH_ROTL(h.a ^ v, 32) * FH_BC1;
-	t.b = (FH_ROTL(h.b, 32) ^ v) * FH_BC2;
-	return t;
+	h.a = FH_ROTL(h.a ^ v, 32) * FH_BC1;
+	h.b = (FH_ROTL(h.b, 32) ^ v) * FH_BC2;
+	return h;
 }
 
 static inline uint64_t
@@ -168,15 +191,18 @@ fh64_permute_string(fh_u128_t h, const uint8_t *v, size_t len)
 	size_t n = len / 8;
 	for(; n; n--, v+=8) {
 #if FH_READ_UNALIGNED
+		/* it should be written like this, but clang faster with explicit ordering
 		h = fh64_permute(h, *(uint64_t*)v);
+		*/
+		fh64_permute_imp(&h.a, &h.b, *(uint64_t*)v);
 #else
-		h = fh64_permute(h, fh_load_u64(v, 8));
+		fh64_permute_imp(&h.a, &h.b, fh_load_u64(v, 8));
 #endif
 	}
 	uint64_t t = (uint64_t)len << 56;
 	t |= fh_load_u64(v, len & 7);
-	h.a--; /* fight against length extension */
-	h = fh64_permute(h, t);
+	h.a--;
+	fh64_permute_imp(&h.a, &h.b, t);
 	return h;
 }
 
