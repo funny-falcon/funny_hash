@@ -3,6 +3,6 @@ for CC in gcc clang ; do
 		make clean
 		make all CC=$CC COPT=$COPT
 		make test_file
-		make bench | tee bench/"$CC"_"COPT".out
+		make bench | tee bench/"$CC"_"$COPT".out
 	done
 done
