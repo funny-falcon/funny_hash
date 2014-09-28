@@ -117,7 +117,7 @@ int main(int argc, char **argv)
 		union {
 			char key[16];
 			uint64_t kkey[2];
-		} r;
+		} r = {0};
 		while (chunk ? step_big(&bp, stat.st_size) : step_small(&bp, stat.st_size)) {
 			r.kkey[0] = siphash24(src+bp.off, bp.len, r.key);
 		}
@@ -126,7 +126,7 @@ int main(int argc, char **argv)
 		union {
 			char key[16];
 			uint64_t kkey[2];
-		} r;
+		} r = {0};
 		while (chunk ? step_big(&bp, stat.st_size) : step_small(&bp, stat.st_size)) {
 			r.kkey[0] = siphash13(src+bp.off, bp.len, r.key);
 		}
