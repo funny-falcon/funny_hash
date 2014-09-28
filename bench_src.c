@@ -22,13 +22,21 @@ struct by_piece {
 	uint32_t cnt;
 };
 static inline int
-step(struct by_piece *p, size_t max, size_t limit) {
+step_small(struct by_piece *p, size_t limit) {
 	p->off += p->cnt * p->len;
 	p->cnt ^= 1;
 	p->gen = p->gen * 5 + 1;
-	p->len = p->gen % max + 1;
+	p->len = p->gen % 20 + 1;
 	if (p->len > limit - p->off) p->len = limit - p->off;
 	return p->off < limit;
+}
+
+static inline int
+step_big(struct by_piece *p, size_t limit) {
+	p->off = 0;
+	p->len = limit;
+	p->cnt++;
+	return p->cnt <= 10;
 }
 
 static const char *kinds[] = {"funny32", "funny64", "murmur32", "murmur128", "sip24", "sip13", "lookup3"};
@@ -83,46 +91,26 @@ int main(int argc, char **argv)
 	printf("%s %s %s :\t", argv[0], argv[1], argv[2]);
 	if (strcmp(argv[1], "funny32") == 0) {
 		uint32_t res = 0;
-		if (chunk == 0) { /* by piece */
-			while (step(&bp, 20, stat.st_size)) {
-				res = fh32_string_hash(src+bp.off, bp.len, res);
-			}
-		} else {
-			for(i = 0; i < 10; i++)
-				res = fh32_string_hash(src, stat.st_size, res);
+		while (chunk ? step_big(&bp, stat.st_size) : step_small(&bp, stat.st_size)) {
+			res = fh32_string_hash(src+bp.off, bp.len, res);
 		}
 		printf("hash: %08x\t\t", res);
 	} else if (strcmp(argv[1], "funny64") == 0) {
 		uint64_t res = 0;
-		if (chunk == 0) { /* by piece */
-			while (step(&bp, 20, stat.st_size)) {
-				res = fh64_string_hash(src+bp.off, bp.len, res);
-			}
-		} else {
-			for(i = 0; i < 10; i++)
-				res = fh64_string_hash(src, stat.st_size, res);
+		while (chunk ? step_big(&bp, stat.st_size) : step_small(&bp, stat.st_size)) {
+			res = fh64_string_hash(src+bp.off, bp.len, res);
 		}
 		printf("hash: %08x%08x\t", (uint32_t)(res>>32), (uint32_t)res);
 	} else if (strcmp(argv[1], "murmur32") == 0) {
 		uint32_t res = 0;
-		if (chunk == 0) { /* by piece */
-			while (step(&bp, 20, stat.st_size)) {
-				res = MurmurHash3_x86_32(src+bp.off, bp.len, res);
-			}
-		} else {
-			for(i = 0; i < 10; i++)
-				res = MurmurHash3_x86_32(src, stat.st_size, res);
+		while (chunk ? step_big(&bp, stat.st_size) : step_small(&bp, stat.st_size)) {
+			res = MurmurHash3_x86_32(src+bp.off, bp.len, res);
 		}
 		printf("hash: %08x\t\t", res);
 	} else if (strcmp(argv[1], "murmur128") == 0) {
 		uint64_t res[2] = {0, 0};
-		if (chunk == 0) { /* by piece */
-			while (step(&bp, 20, stat.st_size)) {
-				MurmurHash3_x64_128(src+bp.off, bp.len, res[0]^res[1], res);
-			}
-		} else {
-			for(i = 0; i < 10; i++)
-				MurmurHash3_x64_128(src, stat.st_size, res[0]^res[1], res);
+		while (chunk ? step_big(&bp, stat.st_size) : step_small(&bp, stat.st_size)) {
+			MurmurHash3_x64_128(src+bp.off, bp.len, res[0]^res[1], res);
 		}
 		printf("hash: %08x%08x\t", (uint32_t)(res[0]>>32), (uint32_t)res[0]);
 	} else if (strcmp(argv[1], "sip24") == 0) {
@@ -130,14 +118,8 @@ int main(int argc, char **argv)
 			char key[16];
 			uint64_t kkey[2];
 		} r;
-		uint64_t res;
-		if (chunk == 0) { /* by piece */
-			while (step(&bp, 20, stat.st_size)) {
-				r.kkey[0] = siphash24(src+bp.off, bp.len, r.key);
-			}
-		} else {
-			for(i = 0; i < 10; i++)
-				r.kkey[0] = siphash24(src, stat.st_size, r.key);
+		while (chunk ? step_big(&bp, stat.st_size) : step_small(&bp, stat.st_size)) {
+			r.kkey[0] = siphash24(src+bp.off, bp.len, r.key);
 		}
 		printf("hash: %08x%08x\t", (uint32_t)(r.kkey[0]>>32), (uint32_t)r.kkey[0]);
 	} else if (strcmp(argv[1], "sip13") == 0) {
@@ -145,25 +127,14 @@ int main(int argc, char **argv)
 			char key[16];
 			uint64_t kkey[2];
 		} r;
-		uint64_t res;
-		if (chunk == 0) { /* by piece */
-			while (step(&bp, 20, stat.st_size)) {
-				r.kkey[0] = siphash13(src+bp.off, bp.len, r.key);
-			}
-		} else {
-			for(i = 0; i < 10; i++)
-				r.kkey[0] = siphash13(src, stat.st_size, r.key);
+		while (chunk ? step_big(&bp, stat.st_size) : step_small(&bp, stat.st_size)) {
+			r.kkey[0] = siphash13(src+bp.off, bp.len, r.key);
 		}
 		printf("hash: %08x%08x\t", (uint32_t)(r.kkey[0]>>32), (uint32_t)r.kkey[0]);
 	} else if (strcmp(argv[1], "lookup3") == 0) {
 		uint32_t res = 0;
-		if (chunk == 0) { /* by piece */
-			while (step(&bp, 20, stat.st_size)) {
-				res = hashlittle(src+bp.off, bp.len, res);
-			}
-		} else {
-			for(i = 0; i < 10; i++)
-				res = hashlittle(src, stat.st_size, res);
+		while (chunk ? step_big(&bp, stat.st_size) : step_small(&bp, stat.st_size)) {
+			res = hashlittle(src+bp.off, bp.len, res);
 		}
 		printf("hash: %08x\t\t", res);
 	}
