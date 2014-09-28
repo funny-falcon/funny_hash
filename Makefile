@@ -20,7 +20,7 @@ bench32: bench_32
 endif
 
 test_file:
-	cat /dev/urandom | head -c 600000000 > test_file
+	cat /dev/urandom | head -c 300000000 > test_file
 
 bench_32: bench_src.c funny_hash.h others/MurmurHash3.h others/csiphash.h others/lookup3.h
 	$(CC) $(CFLAGS) $(COPT) -m32 bench_src.c -o bench_32
