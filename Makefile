@@ -7,8 +7,8 @@ clean:
 	rm test32
 	rm test
 
-test32: test.c funny_hash.h
+test32: test.c funny_hash.h others/MurmurHash3.h others/csiphash.h
 	$(CC) $(CFLAGS) $(COPT) -m32 test.c -o test32
 
-test: test.c funny_hash.h
+test: test.c funny_hash.h others/MurmurHash3.h others/csiphash.h
 	$(CC) $(CFLAGS) $(COPT) test.c -o test
