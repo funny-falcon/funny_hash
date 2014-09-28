@@ -23,10 +23,13 @@ struct by_piece {
 static inline int
 step(struct by_piece *p, size_t max, size_t limit) {
 	p->off += !p->cnt * p->len;
-	p->cnt += !p->cnt * 5 - 1;
+	if (p->cnt == 0) {
+		p->cnt = 5;
+	}
+	p->cnt--;
 	p->gen = p->gen * 5 + 1;
 	p->len = p->gen % max + 1;
-	if (p->off + p->len > limit) p->len = limit - p->off;
+	if (p->len > limit - p->off) p->len = limit - p->off;
 	return p->off < limit;
 }
 
@@ -79,7 +82,8 @@ int main(int argc, char **argv)
 		printf("gettimeofday(): %s\n", strerror(errno));
 		exit(1);
 	}
-	if (kind == 0) { /* funny32 */
+	printf("func: %s\tchunk: %s\t", argv[1], argv[2]);
+	if (strcmp(argv[1], "funny32") == 0) {
 		uint32_t res = 0;
 		if (chunk == 0) { /* by piece */
 			while (step(&bp, 20, stat.st_size)) {
@@ -89,8 +93,8 @@ int main(int argc, char **argv)
 			for(i = 0; i < 10; i++)
 				res = fh32_string_hash(src, stat.st_size, res);
 		}
-		printf("hash: %08x\n", res);
-	} else if (kind == 1) { /* funny64 */
+		printf("hash: %08x\t", res);
+	} else if (strcmp(argv[1], "funny64") == 0) {
 		uint64_t res = 0;
 		if (chunk == 0) { /* by piece */
 			while (step(&bp, 20, stat.st_size)) {
@@ -100,8 +104,8 @@ int main(int argc, char **argv)
 			for(i = 0; i < 10; i++)
 				res = fh64_string_hash(src, stat.st_size, res);
 		}
-		printf("hash: %08x%08x\n", (uint32_t)(res>>32), (uint32_t)res);
-	} else if (kind == 2) { /* murmur32 */
+		printf("hash: %08x%08x\t", (uint32_t)(res>>32), (uint32_t)res);
+	} else if (strcmp(argv[1], "murmur32") == 0) {
 		uint32_t res = 0;
 		if (chunk == 0) { /* by piece */
 			while (step(&bp, 20, stat.st_size)) {
@@ -111,8 +115,8 @@ int main(int argc, char **argv)
 			for(i = 0; i < 10; i++)
 				res = MurmurHash3_x86_32(src, stat.st_size, res);
 		}
-		printf("hash: %08x\n", res);
-	} else if (kind == 3) { /* murmur128 as 64 */
+		printf("hash: %08x\t", res);
+	} else if (strcmp(argv[1], "murmur128") == 0) {
 		uint64_t res[2] = {0, 0};
 		if (chunk == 0) { /* by piece */
 			while (step(&bp, 20, stat.st_size)) {
@@ -122,8 +126,8 @@ int main(int argc, char **argv)
 			for(i = 0; i < 10; i++)
 				MurmurHash3_x64_128(src, stat.st_size, res[0]^res[1], res);
 		}
-		printf("hash: %08x%08x\n", (uint32_t)(res[0]>>32), (uint32_t)res[0]);
-	} else if (kind == 4) { /* siphash24 */
+		printf("hash: %08x%08x", (uint32_t)(res[0]>>32), (uint32_t)res[0]);
+	} else if (strcmp(argv[1], "sip24") == 0) {
 		union {
 			char key[16];
 			uint64_t kkey[2];
@@ -137,8 +141,8 @@ int main(int argc, char **argv)
 			for(i = 0; i < 10; i++)
 				r.kkey[0] = siphash24(src, stat.st_size, r.key);
 		}
-		printf("hash: %08x%08x\n", (uint32_t)(r.kkey[0]>>32), (uint32_t)r.kkey[0]);
-	} else if (kind == 5) { /* siphash13 */
+		printf("hash: %08x%08x\t", (uint32_t)(r.kkey[0]>>32), (uint32_t)r.kkey[0]);
+	} else if (strcmp(argv[1], "sip13") == 0) {
 		union {
 			char key[16];
 			uint64_t kkey[2];
