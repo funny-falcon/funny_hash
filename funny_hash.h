@@ -8,6 +8,40 @@
  * I'm not responsible for any damage cause by this piece of code.
  */
 
+/* API */
+
+/* 64bit state for 32bit result */
+typedef struct fh_u64_s {
+	uint32_t a, b;
+} fh_u64_t;
+/* mix 32bit integer into 64bit state */
+static inline fh_u64_t fh32_permute(fh_u64_t h, uint32_t v);
+/* hash string, seed with and produce 64bit state */
+static inline fh_u64_t fh32_permute_string(fh_u64_t h, const uint8_t *v, size_t len);
+/* state finalization to 32bit value */
+static inline uint32_t fh32_finalize(fh_u64_t h);
+/* convinient function to hash buffer with 32bit seed */
+static inline uint32_t fh32_string_hash(const void *buf, size_t len, uint32_t seed);
+/* convinient function to hash buffer with 64bit seed */
+static inline uint32_t fh32_string_hash2(const void *buf, size_t len, uint32_t seed1, uint32_t seed2);
+
+/* 128bit state for 64bit result */
+typedef struct fh_u128_s {
+	uint64_t a, b;
+} fh_u128_t;
+/* mix 64bit integer into 128bit state */
+static inline fh_u128_t fh64_permute(fh_u128_t h, uint64_t v);
+/* hash string, seed with and produce 128bit state */
+static inline fh_u128_t fh64_permute_string(fh_u128_t h, const uint8_t *v, size_t len);
+/* state finalization to 64bit value */
+static inline uint64_t  fh64_finalize(fh_u128_t h);
+/* convinient function to hash buffer with 64bit seed */
+static inline uint64_t  fh64_string_hash(const void *buf, size_t len, uint64_t seed);
+/* convinient function to hash buffer with 128bit seed */
+static inline uint64_t  fh64_string_hash2(const void *buf, size_t len, uint64_t seed1, uint64_t seed2);
+
+/* IMPLEMENTATION */
+
 #ifndef FH_READ_UNALIGNED
 #define FH_READ_UNALIGNED 1
 #endif
@@ -16,9 +50,6 @@
 #define U64_CONSTANT(x) (x##ull)
 #endif
 
-typedef struct fh_u64s {
-	uint32_t a, b;
-} fh_u64_t;
 static const uint32_t FH_C1 = 0xb8b34b2d;
 static const uint32_t FH_C2 = 0x52c6a5d9;
 static inline fh_u64_t
@@ -94,9 +125,6 @@ fh32_string_hash2(const void* d, size_t len, uint32_t seed1, uint32_t seed2)
 	return fh32_finalize(v);
 }
 
-typedef struct fh_u128s {
-	uint64_t a, b;
-} fh_u128_t;
 static const uint64_t FH_BC1 = U64_CONSTANT(0xacd5ad43274593b9);
 static const uint64_t FH_BC2 = U64_CONSTANT(0x6956abd6ed558e3d);
 static inline fh_u128_t
