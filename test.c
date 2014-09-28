@@ -20,13 +20,10 @@ struct by_piece {
 	uint32_t len;
 	uint32_t cnt;
 };
-static inline int step(struct by_piece *p, size_t max, size_t limit) {
-	if (p->cnt == 5) {
-		p->off += p->len;
-		p->cnt = 0;
-	}
-	else
-		p->cnt++;
+static inline int
+step(struct by_piece *p, size_t max, size_t limit) {
+	p->off += !p->cnt * p->len;
+	p->cnt += !p->cnt * 5 - 1;
 	p->gen = p->gen * 5 + 1;
 	p->len = p->gen % max + 1;
 	if (p->off + p->len > limit) p->len = limit - p->off;
