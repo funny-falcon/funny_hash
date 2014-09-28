@@ -80,7 +80,7 @@ int main(int argc, char **argv)
 		printf("gettimeofday(): %s\n", strerror(errno));
 		exit(1);
 	}
-	printf("func: %s\tchunk: %s\t", argv[1], argv[2]);
+	printf("%s %s %s :\t", argv[0], argv[1], argv[2]);
 	if (strcmp(argv[1], "funny32") == 0) {
 		uint32_t res = 0;
 		if (chunk == 0) { /* by piece */
@@ -91,7 +91,7 @@ int main(int argc, char **argv)
 			for(i = 0; i < 10; i++)
 				res = fh32_string_hash(src, stat.st_size, res);
 		}
-		printf("hash: %08x\t", res);
+		printf("hash: %08x\t\t", res);
 	} else if (strcmp(argv[1], "funny64") == 0) {
 		uint64_t res = 0;
 		if (chunk == 0) { /* by piece */
@@ -113,7 +113,7 @@ int main(int argc, char **argv)
 			for(i = 0; i < 10; i++)
 				res = MurmurHash3_x86_32(src, stat.st_size, res);
 		}
-		printf("hash: %08x\t", res);
+		printf("hash: %08x\t\t", res);
 	} else if (strcmp(argv[1], "murmur128") == 0) {
 		uint64_t res[2] = {0, 0};
 		if (chunk == 0) { /* by piece */
@@ -124,7 +124,7 @@ int main(int argc, char **argv)
 			for(i = 0; i < 10; i++)
 				MurmurHash3_x64_128(src, stat.st_size, res[0]^res[1], res);
 		}
-		printf("hash: %08x%08x", (uint32_t)(res[0]>>32), (uint32_t)res[0]);
+		printf("hash: %08x%08x\t", (uint32_t)(res[0]>>32), (uint32_t)res[0]);
 	} else if (strcmp(argv[1], "sip24") == 0) {
 		union {
 			char key[16];
@@ -154,7 +154,7 @@ int main(int argc, char **argv)
 			for(i = 0; i < 10; i++)
 				r.kkey[0] = siphash13(src, stat.st_size, r.key);
 		}
-		printf("hash: %08x%08x", (uint32_t)(r.kkey[0]>>32), (uint32_t)r.kkey[0]);
+		printf("hash: %08x%08x\t", (uint32_t)(r.kkey[0]>>32), (uint32_t)r.kkey[0]);
 	} else if (strcmp(argv[1], "lookup3") == 0) {
 		uint32_t res = 0;
 		if (chunk == 0) { /* by piece */
@@ -165,7 +165,7 @@ int main(int argc, char **argv)
 			for(i = 0; i < 10; i++)
 				res = hashlittle(src, stat.st_size, res);
 		}
-		printf("hash: %08x\t", res);
+		printf("hash: %08x\t\t", res);
 	}
 	if (gettimeofday(&tstop, NULL) == -1) {
 		printf("gettimeofday(): %s\n", strerror(errno));
