@@ -37,12 +37,18 @@ uint64_t fh64_string_hash(const void *buf, size_t len, uint64_t seed);
 uint64_t fh64_string_hash2(const void *buf, size_t len, uint64_t seed1, uint64_t seed2);
 ````
 
+Benchmark
+=========
+
 Some benchmark results on Core-i3 2330M 2000MHz 300M random file:
 
 x86_64
+------
+
 By 1-20byte substrings twice
+
 function  | gcc -O2  | clang -O2
--------------------------------
+----------|----------|---------
 funny32   | 1.729613 | 1.602314
 murmur32  | 1.982314 | 1.674969
 funny64   | 2.046157 | 1.920657
@@ -52,8 +58,9 @@ sip13     | 3.176685 | 2.651061
 sip24     | 3.786810 | 3.181494
 
 10 times 300M
+
 function  | gcc -O2  | clang -O2
---------------------------------
+----------|----------|----------
 funny32   | 2.537391 | 2.151737
 murmur32  | 2.150074 | 2.189807
 funny64   | 1.284647 | 1.138336
@@ -63,9 +70,12 @@ sip13     | 1.871403 | 1.811810
 sip24     | 3.432657 | 3.354086
 
 x86 (by -m32)
+-------------
+
 By 1-20byte substrings twice
+
 function  | gcc -O2  | clang -O2
---------------------------------
+----------|----------|----------
 funny32   | 1.907123 | 1.796084
 murmur32  | 2.200570 | 1.876548
 funny64   | 3.361184 | 2.679012
@@ -76,11 +86,12 @@ sip24     | 8.775827 | 6.917179
 
 
 10 times 300M
-function  | gcc -O2   | clang -O2
----------------------------------
+
+function  | gcc -O2   | clang -O2 
+----------|-----------|----------
 funny32   | 2.393317  | 2.153600
 murmur32  | 2.180202  | 2.191719
-funny64   | 3.839035  | 2.516634
+funny64   | 3.839035  | 2.516634 
 murmur128 | 4.354525  | 4.351691
 lookup3   | 2.875730  | 2.727401
 sip13     | 6.741251  | 7.384649
