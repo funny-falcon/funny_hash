@@ -29,12 +29,12 @@
 
 #define	FORCE_INLINE inline __attribute__((always_inline))
 
-inline uint32_t rotl32 ( uint32_t x, int8_t r )
+static inline uint32_t rotl32 ( uint32_t x, int8_t r )
 {
   return (x << r) | (x >> (32 - r));
 }
 
-inline uint64_t rotl64 ( uint64_t x, int8_t r )
+static inline uint64_t rotl64 ( uint64_t x, int8_t r )
 {
   return (x << r) | (x >> (64 - r));
 }
@@ -50,12 +50,12 @@ inline uint64_t rotl64 ( uint64_t x, int8_t r )
 // Block read - if your platform needs to do endian-swapping or can only
 // handle aligned reads, do the conversion here
 
-FORCE_INLINE uint32_t getblock32 ( const uint32_t * p, int i )
+static FORCE_INLINE uint32_t getblock32 ( const uint32_t * p, int i )
 {
   return p[i];
 }
 
-FORCE_INLINE uint64_t getblock64 ( const uint64_t * p, int i )
+static FORCE_INLINE uint64_t getblock64 ( const uint64_t * p, int i )
 {
   return p[i];
 }
