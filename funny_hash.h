@@ -163,7 +163,7 @@ fh_load_u64(const uint8_t *v, unsigned len)
 	uint64_t x;
 #if !FH_READ_UNALIGNED
 	if (len == 8)
-		x = fh_load_u32(v, 4) | ((uint64_t)fh_load_u32(v+4, 4) << 32);
+		x = (uint64_t)fh_load_u32(v, 4) | ((uint64_t)fh_load_u32(v+4, 4) << 32);
 	else {
 #endif
 		x = fh_load_u32(v, len & 3);
