@@ -14,6 +14,7 @@
 #include "others/MurmurHash3.h"
 #include "others/csiphash.h"
 #include "others/lookup3.h"
+#include "others/spooky-c.h"
 
 struct by_piece {
 	size_t off;
@@ -39,7 +40,7 @@ step_big(struct by_piece *p, size_t limit) {
 	return p->cnt <= 10;
 }
 
-static const char *kinds[] = {"funny32", "funny64", "murmur32", "murmur128", "sip24", "sip13", "lookup3"};
+static const char *kinds[] = {"funny32", "funny64", "murmur32", "murmur128", "sip24", "sip13", "lookup3", "spooky"};
 static const char *chunks[] = {"piece", "whole"};
 #define arcnt(a) (sizeof(a)/ sizeof(a[0]))
 int main(int argc, char **argv)
@@ -137,6 +138,12 @@ int main(int argc, char **argv)
 			res = hashlittle(src+bp.off, bp.len, res);
 		}
 		printf("\"hash\": \"%08x\",\t\t", res);
+	} else if (strcmp(argv[1], "spooky") == 0) {
+		uint64_t res = 0;
+		while (chunk ? step_big(&bp, stat.st_size) : step_small(&bp, stat.st_size)) {
+			res = spooky_shorthash(src+bp.off, bp.len, res);
+		}
+		printf("\"hash\": \"%08x%08x\",\t", (uint32_t)(res>>32), (uint32_t)res);
 	}
 	if (gettimeofday(&tstop, NULL) == -1) {
 		printf("gettimeofday(): %s\n", strerror(errno));
@@ -151,7 +158,7 @@ int main(int argc, char **argv)
 	printf("\"time\": %d.%02d},\n", (int)tstop.tv_sec, (int)tstop.tv_usec/10000);
 	return 0;
 help:
-	printf("%s (funny32|funny64|murmur32|murmur128|sip24|sip13|lookup3) (piece|whole) filename\n", argv[0]);
+	printf("%s (funny32|funny64|murmur32|murmur128|sip24|sip13|lookup3|spooky) (piece|whole) filename\n", argv[0]);
 	printf("\tfunny32|funny64|murmur32|murmur128|sip24|sip13 - function to test\n");
 	printf("\tpiece|whole - whole file at once or by 1-20 byte pieces\n");
 	printf("\t\t(since i don't use incremental implementations, hashsum by pieces will differ\n)");
