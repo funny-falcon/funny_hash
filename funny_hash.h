@@ -83,10 +83,8 @@ fh_load_u32(const uint8_t *v, unsigned len)
 	case 3: x |= v[2] << 16;
 	case 2: x |= v[1] << 8;
 	case 1: x |= v[0];
-	case 0:
-		return x;
 	}
-	return 0;
+	return x;
 }
 
 static inline fh_u64_t
@@ -179,10 +177,8 @@ fh_load_u64(const uint8_t *v, unsigned len)
 	case 3: x |= v[2] << 16;
 	case 2: x |= v[1] << 8;
 	case 1: x |= v[0];
-	case 0:
-		return x;
 	}
-	return 0;
+	return x;
 }
 
 static inline fh_u128_t
