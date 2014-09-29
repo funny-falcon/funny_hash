@@ -174,7 +174,7 @@ fh_load_u64(const uint8_t *v, unsigned len)
 #if FH_READ_UNALIGNED
 		return x | *(uint32_t*)v;
 #else
-		x |= v[3] << 24;
+		x |= (uint64_t)v[3] << 24;
 #endif
 	case 3: x |= v[2] << 16;
 	case 2: x |= v[1] << 8;
