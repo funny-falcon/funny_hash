@@ -62,21 +62,21 @@ int main(int argc, char **argv)
 
 	int fd = open(argv[3], O_RDONLY);
 	if (fd == -1) {
-		printf("open(%s): %s\n", argv[2], strerror(errno));
+		printf("open(%s): %s\n", argv[3], strerror(errno));
 		exit(1);
 	}
 	struct stat stat;
 	if (fstat(fd, &stat) == -1) {
-		printf("fstat(%s): %s\n", argv[2], strerror(errno));
+		printf("fstat(%s): %s\n", argv[3], strerror(errno));
 		exit(1);
 	}
 	void *src = mmap(NULL, stat.st_size, PROT_READ, MAP_SHARED, fd, 0);
 	if (src == MAP_FAILED) {
-		printf("mmap(%s): %s\n", argv[2], strerror(errno));
+		printf("mmap(%s): %s\n", argv[3], strerror(errno));
 		exit(1);
 	}
 	if (madvise(src, stat.st_size, MADV_SEQUENTIAL) == -1) {
-		printf("madvise(%s): %s\n", argv[2], strerror(errno));
+		printf("madvise(%s): %s\n", argv[3], strerror(errno));
 		exit(1);
 	}
 	/* loop to load file in a cache */
@@ -88,31 +88,31 @@ int main(int argc, char **argv)
 		printf("gettimeofday(): %s\n", strerror(errno));
 		exit(1);
 	}
-	printf("%s %s %s :\t", argv[0], argv[1], argv[2]);
+	printf("{\"exe\":\"%s\", \"fun\":\"%s\", \"chunk\":\"%s\",\t", argv[0], argv[1], argv[2]);
 	if (strcmp(argv[1], "funny32") == 0) {
 		uint32_t res = 0;
 		while (chunk ? step_big(&bp, stat.st_size) : step_small(&bp, stat.st_size)) {
 			res = fh32_string_hash(src+bp.off, bp.len, res);
 		}
-		printf("hash: %08x\t\t", res);
+		printf("\"hash\": \"%08x\",\t\t", res);
 	} else if (strcmp(argv[1], "funny64") == 0) {
 		uint64_t res = 0;
 		while (chunk ? step_big(&bp, stat.st_size) : step_small(&bp, stat.st_size)) {
 			res = fh64_string_hash(src+bp.off, bp.len, res);
 		}
-		printf("hash: %08x%08x\t", (uint32_t)(res>>32), (uint32_t)res);
+		printf("\"hash\": \"%08x%08x\",\t", (uint32_t)(res>>32), (uint32_t)res);
 	} else if (strcmp(argv[1], "murmur32") == 0) {
 		uint32_t res = 0;
 		while (chunk ? step_big(&bp, stat.st_size) : step_small(&bp, stat.st_size)) {
 			res = MurmurHash3_x86_32(src+bp.off, bp.len, res);
 		}
-		printf("hash: %08x\t\t", res);
+		printf("\"hash\": \"%08x\",\t\t", res);
 	} else if (strcmp(argv[1], "murmur128") == 0) {
 		uint64_t res[2] = {0, 0};
 		while (chunk ? step_big(&bp, stat.st_size) : step_small(&bp, stat.st_size)) {
 			MurmurHash3_x64_128(src+bp.off, bp.len, res[0]^res[1], res);
 		}
-		printf("hash: %08x%08x\t", (uint32_t)(res[0]>>32), (uint32_t)res[0]);
+		printf("\"hash\": \"%08x%08x\",\t", (uint32_t)(res[0]>>32), (uint32_t)res[0]);
 	} else if (strcmp(argv[1], "sip24") == 0) {
 		union {
 			char key[16];
@@ -121,7 +121,7 @@ int main(int argc, char **argv)
 		while (chunk ? step_big(&bp, stat.st_size) : step_small(&bp, stat.st_size)) {
 			r.kkey[0] = siphash24(src+bp.off, bp.len, r.key);
 		}
-		printf("hash: %08x%08x\t", (uint32_t)(r.kkey[0]>>32), (uint32_t)r.kkey[0]);
+		printf("\"hash\": \"%08x%08x\",\t", (uint32_t)(r.kkey[0]>>32), (uint32_t)r.kkey[0]);
 	} else if (strcmp(argv[1], "sip13") == 0) {
 		union {
 			char key[16];
@@ -130,13 +130,13 @@ int main(int argc, char **argv)
 		while (chunk ? step_big(&bp, stat.st_size) : step_small(&bp, stat.st_size)) {
 			r.kkey[0] = siphash13(src+bp.off, bp.len, r.key);
 		}
-		printf("hash: %08x%08x\t", (uint32_t)(r.kkey[0]>>32), (uint32_t)r.kkey[0]);
+		printf("\"hash\": \"%08x%08x\",\t", (uint32_t)(r.kkey[0]>>32), (uint32_t)r.kkey[0]);
 	} else if (strcmp(argv[1], "lookup3") == 0) {
 		uint32_t res = 0;
 		while (chunk ? step_big(&bp, stat.st_size) : step_small(&bp, stat.st_size)) {
 			res = hashlittle(src+bp.off, bp.len, res);
 		}
-		printf("hash: %08x\t\t", res);
+		printf("\"hash\": \"%08x\",\t\t", res);
 	}
 	if (gettimeofday(&tstop, NULL) == -1) {
 		printf("gettimeofday(): %s\n", strerror(errno));
@@ -148,7 +148,7 @@ int main(int argc, char **argv)
 	}
 	tstop.tv_usec -= tstart.tv_usec;
 	tstop.tv_sec -= tstart.tv_sec;
-	printf("time: %d.%06d\n", (int)tstop.tv_sec, (int)tstop.tv_usec);
+	printf("\"time\": %d.%02d},\n", (int)tstop.tv_sec, (int)tstop.tv_usec/10000);
 	return 0;
 help:
 	printf("%s (funny32|funny64|murmur32|murmur128|sip24|sip13|lookup3) (piece|whole) filename\n", argv[0]);
