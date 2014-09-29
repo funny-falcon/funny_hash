@@ -4,7 +4,7 @@ COPT=-O2
 
 all: bench/bench_nat
 clean:
-	rm bench_nat
+	rm bench/bench_nat
 bench: test_file
 bench: benchnat
 benchnat: bench/bench_nat
@@ -13,7 +13,7 @@ ifeq ($(shell uname -p),x86_64)
 all: bench/bench_32
 clean: clean32
 clean32:
-	rm bench_32
+	rm bench/bench_32
 bench: bench32
 bench32: bench/bench_32
 	sh bench/run_bench.sh bench/bench_32
