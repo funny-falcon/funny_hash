@@ -160,24 +160,20 @@ fh64_permute(fh_u128_t h, uint64_t v)
 static inline uint64_t
 fh_load_u64(const uint8_t *v, unsigned len)
 {
-	uint64_t x = 0;
-	switch(len) {
+	uint64_t x;
 #if !FH_READ_UNALIGNED
-	case 8: x |= (uint64_t)v[7] << 56;
+	if (len == 8)
+		x = fh_load_u32(v, 4) | ((uint64_t)fh_load_u32(v+4, 4) << 32);
+	else {
 #endif
-	case 7: x |= (uint64_t)v[6] << 48;
-	case 6: x |= (uint64_t)v[5] << 40;
-	case 5: x |= (uint64_t)v[4] << 32;
-	case 4:
+		x = fh_load_u32(v, len & 3);
+		if (len & 4)
 #if FH_READ_UNALIGNED
-		return x | *(uint32_t*)v;
+			x |= (uint64_t)(*(uint32_t*)(v + (len & 3))) << ((len & 3) * 8);
 #else
-		x |= (uint64_t)v[3] << 24;
-#endif
-	case 3: x |= v[2] << 16;
-	case 2: x |= v[1] << 8;
-	case 1: x |= v[0];
+			x |= (uint64_t)(fh_load_u32(v + (len & 3), 4)) << ((len & 3) * 8);
 	}
+#endif
 	return x;
 }
 
