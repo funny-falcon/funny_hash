@@ -78,7 +78,7 @@ static inline uint64_t spooky_shorthash ( const void *message, size_t length, ui
 
 	remainder = length % 32;
 	a = seed;
-	b = length;
+	b = seed;
 	c = SC_CONST;
 	d = SC_CONST;
 
