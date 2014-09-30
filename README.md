@@ -43,7 +43,7 @@ uint64_t fh64_string_hash2(const void *buf, size_t len, uint64_t seed1, uint64_t
 Benchmark
 =========
 
-Some benchmark results on Core-i3 2330M 2000MHz 300M random file:
+Some benchmark results on Core-i7 2600 2400MHz 300M random blob:
 
 x86_64
 ------
@@ -52,27 +52,27 @@ By 1-20byte substrings twice
 
 function  | gcc -O2 | clang -O2
 ----------|---------|----------
-funny32   |   1.75  |   1.60 
-funny64   |   1.86  |   1.69 
-murmur32  |   2.03  |   1.68 
-murmur128 |   2.48  |   2.37 
-sip24     |   3.72  |   3.20 
-sip13     |   3.18  |   2.65 
-lookup3   |   2.37  |   2.01 
-spooky    |   2.27  |   1.86
+funny32   |   1.20  |   1.15 
+funny64   |   1.34  |   1.21 
+murmur32  |   1.46  |   1.24 
+murmur128 |   1.78  |   1.65 
+sip24     |   2.76  |   2.26 
+sip13     |   2.36  |   1.92 
+lookup3   |   1.64  |   1.40 
+spooky    |   1.59  |   1.29 
 
 10 times 300M at once
 
 function  | gcc -O2 | clang -O2
 ----------|---------|----------
-funny32   |   2.49  |   2.23 
-funny64   |   1.23  |   1.18 
-murmur32  |   2.09  |   2.24 
-murmur128 |   1.05  |   1.35 
-sip24     |   3.40  |   3.32 
-sip13     |   1.80  |   1.87 
-lookup3   |   2.85  |   2.94 
-spooky    |   1.53  |   1.47 
+funny32   |   1.68  |   1.53 
+funny64   |   0.86  |   0.79 
+murmur32  |   1.49  |   1.57 
+murmur128 |   0.72  |   0.89 
+sip24     |   2.43  |   2.41 
+sip13     |   1.27  |   1.28 
+lookup3   |   1.96  |   2.09 
+spooky    |   1.01  |   0.99 
 
 x86 (by -m32)
 -------------
@@ -81,22 +81,24 @@ By 1-20byte substrings twice
 
 function  | gcc -O2 | clang -O2
 ----------|---------|----------
-funny32   |   1.89  |   1.78 
-funny64   |   3.37  |   2.67 
-murmur32  |   2.19  |   1.87 
-murmur128 |   4.86  |   4.10 
-sip24     |   8.80  |   6.93 
-sip13     |   6.41  |   4.86 
-lookup3   |   2.54  |   2.21 
+funny32   |   1.49  |   1.23 
+funny64   |   2.59  |   1.89 
+murmur32  |   1.56  |   1.34 
+murmur128 |   3.55  |   2.94 
+sip24     |   6.43  |   5.02 
+sip13     |   4.69  |   3.53 
+lookup3   |   1.81  |   1.60 
+spooky    |   4.22  |   2.79 
 
 10 times 300M at once
 
 function  | gcc -O2 | clang -O2
 ----------|---------|----------
-funny32   |   2.35  |   2.15 
-funny64   |   3.77  |   2.67 
-murmur32  |   2.12  |   2.18 
-murmur128 |   4.30  |   4.37 
-sip24     |  12.33  |  15.19 
-sip13     |   6.66  |   7.41 
-lookup3   |   2.81  |   2.95 
+funny32   |   1.68  |   1.53 
+funny64   |   2.75  |   1.82 
+murmur32  |   1.51  |   1.54 
+murmur128 |   3.12  |   3.13 
+sip24     |   9.12  |  11.18 
+sip13     |   4.85  |   5.37 
+lookup3   |   2.03  |   1.95 
+spooky    |   5.44  |   3.01 
