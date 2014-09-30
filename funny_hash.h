@@ -50,10 +50,15 @@ static const uint32_t FH_C2 = 0x52c6a5d9;
 static inline void
 fh32_permute(uint32_t v, uint32_t *a, uint32_t *b)
 {
+#if 0
+	*a = FH_ROTL(*a ^ v, 16) * FH_C1;
+	*b = (FH_ROTL(*b, 16) ^ v) * FH_C2;
+#else
 	*a ^= v;
 	*b = FH_ROTL(*b, 16);
 	*a = FH_ROTL(*a, 16) * FH_C1;
 	*b = (*b ^ v) * FH_C2;
+#endif
 }
 
 #if FH_READ_UNALIGNED
@@ -134,10 +139,15 @@ static const uint64_t FH_BC2 = U64_CONSTANT(0x6956abd6ed558e3d);
 static inline void
 fh64_permute(uint64_t v, uint64_t *a, uint64_t *b)
 {
+#if 0
+	*a = FH_ROTL(*a ^ v, 32) * FH_BC1;
+	*b = (FH_ROTL(*b, 32) ^ v) * FH_BC2;
+#else
 	*a ^= v;
 	*b = FH_ROTL(*b, 32);
 	*a = FH_ROTL(*a, 32) * FH_BC1;
 	*b = (*b ^ v) * FH_BC2;
+#endif
 }
 
 #if FH_READ_UNALIGNED
