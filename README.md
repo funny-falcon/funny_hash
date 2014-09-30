@@ -21,9 +21,9 @@ fh_u64_t fh32_permute(fh_u64_t h, uint32_t v);
 fh_u64_t fh32_permute_string(fh_u64_t h, const uint8_t *v, size_t len);
 /* state finalization to 32bit value */
 uint32_t fh32_finalize(fh_u64_t h);
-/* convinient function to hash buffer with 32bit seed */
+/* convenient function to hash buffer with 32bit seed */
 uint32_t fh32_string_hash(const void *buf, size_t len, uint32_t seed);
-/* convinient function to hash buffer with 64bit seed */
+/* convenient function to hash buffer with 64bit seed */
 uint32_t fh32_string_hash2(const void *buf, size_t len, uint32_t seed1, uint32_t seed2);
 
 /* 128bit state for 64bit result */
@@ -34,9 +34,9 @@ fh_u128_t fh64_permute(fh_u128_t h, uint64_t v);
 fh_u128_t fh64_permute_string(fh_u128_t h, const uint8_t *v, size_t len);
 /* state finalization to 64bit value */
 uint64_t fh64_finalize(fh_u128_t h);
-/* convinient function to hash buffer with 64bit seed */
+/* convenient function to hash buffer with 64bit seed */
 uint64_t fh64_string_hash(const void *buf, size_t len, uint64_t seed);
-/* convinient function to hash buffer with 128bit seed */
+/* convenient function to hash buffer with 128bit seed */
 uint64_t fh64_string_hash2(const void *buf, size_t len, uint64_t seed1, uint64_t seed2);
 ````
 
