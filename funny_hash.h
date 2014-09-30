@@ -56,15 +56,30 @@ fh32_permute(uint32_t v, uint32_t *a, uint32_t *b)
 	*b = (*b ^ v) * FH_C2;
 }
 
+#if FH_READ_UNALIGNED
+#define fh_load_u32(v) (*(uint32_t*)(v))
+#else
 static inline uint32_t
-fh_load_u32(const uint8_t *v, unsigned len)
+fh_load_u32(const uint8_t *v)
+{
+	/* note: this function could have other shape to be faster on ARM.
+	 * for example, this shape is faster on Core-i7:
+	uint32_t x = v[0];
+	x += (v[1]<<8) | (v[2]<<16);
+	x |= v[3]<<24;
+	return x;
+	 * but this function has no meaning on Core-i7, so that, i leave base shape.
+	 * please, make a pull request if you find faster shape.*/
+	return v[0]|(v[1]<<8)|(v[2]<<16)|(v[3]<<24);
+}
+#endif
+
+static inline uint32_t
+fh_load_u24(const uint8_t *v, unsigned len)
 {
 	uint32_t x = 0;
 	switch(len) {
-#if !FH_READ_UNALIGNED
-	case 4: x |= v[3] << 24;
-#endif
-	case 3: x |= v[2] << 16;
+	case 3: x = v[2] << 16;
 	case 2: x |= v[1] << 8;
 	case 1: x |= v[0];
 	}
@@ -77,14 +92,10 @@ fh32_permute_string(const uint8_t *v, size_t len, uint32_t *a, uint32_t *b)
 	uint32_t t;
 	size_t n = len / 4;
 	for(; n; n--, v+=4) {
-#if FH_READ_UNALIGNED
-		fh32_permute(*(uint32_t*)v, a, b);
-#else
-		fh32_permute(fh_load_u32(v, 4), a, b);
-#endif
+		fh32_permute(fh_load_u32(v), a, b);
 	}
 	t = (uint32_t)len << 24;
-	t |= fh_load_u32(v, len & 3);
+	t |= fh_load_u24(v, len & 3);
 	(*a)--;
 	fh32_permute(t, a, b);
 }
@@ -129,23 +140,23 @@ fh64_permute(uint64_t v, uint64_t *a, uint64_t *b)
 	*b = (*b ^ v) * FH_BC2;
 }
 
+#if FH_READ_UNALIGNED
+#define fh_load_u64(v) (*(uint64_t*)(v))
+#else
 static inline uint64_t
-fh_load_u64(const uint8_t *v, unsigned len)
+fh_load_u64(const uint8_t *v)
+{
+	return (uint64_t)fh_load_u32(v) | ((uint64_t)fh_load_u32(v+4) << 32);
+}
+#endif
+
+static inline uint64_t
+fh_load_u56(const uint8_t *v, unsigned len)
 {
 	uint64_t x;
-#if !FH_READ_UNALIGNED
-	if (len == 8)
-		x = (uint64_t)fh_load_u32(v, 4) | ((uint64_t)fh_load_u32(v+4, 4) << 32);
-	else {
-#endif
-		x = fh_load_u32(v, len & 3);
-		if (len & 4)
-#if FH_READ_UNALIGNED
-			x |= (uint64_t)(*(uint32_t*)(v + (len & 3))) << ((len & 3) * 8);
-#else
-			x |= (uint64_t)(fh_load_u32(v + (len & 3), 4)) << ((len & 3) * 8);
-	}
-#endif
+	x = fh_load_u24(v, len & 3);
+	if (len & 4)
+		x |= (uint64_t)(fh_load_u32(v + (len & 3))) << ((len & 3) * 8);
 	return x;
 }
 
@@ -155,14 +166,10 @@ fh64_permute_string(const uint8_t *v, size_t len, uint64_t *a, uint64_t *b)
 	uint64_t t;
 	size_t n = len / 8;
 	for(; n; n--, v+=8) {
-#if FH_READ_UNALIGNED
-		fh64_permute(*(uint64_t*)v, a, b);
-#else
-		fh64_permute(fh_load_u64(v, 8), a, b);
-#endif
+		fh64_permute(fh_load_u64(v), a, b);
 	}
 	t = (uint64_t)len << 56;
-	t |= fh_load_u64(v, len & 7);
+	t |= fh_load_u56(v, len & 7);
 	(*a)--;
 	fh64_permute(t, a, b);
 }
