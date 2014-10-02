@@ -13,31 +13,27 @@ with little effort)
 There is two boxes of building blocks: 32bit hash for 32bit cpu and 64bit hash for 64bit cpu.
 
 ````C
-/* 64bit state for 32bit result */
-typedef ... fh_u64_t;
 /* mix 32bit integer into 64bit state */
-fh_u64_t fh32_permute(fh_u64_t h, uint32_t v);
+static inline void fh32_permute(uint32_t v, uint32_t *a, uint32_t *b);
 /* hash string, seed with and produce 64bit state */
-fh_u64_t fh32_permute_string(fh_u64_t h, const uint8_t *v, size_t len);
+static inline void fh32_permute_string(const uint8_t *v, size_t len, uint32_t *a, uint32_t *b);
 /* state finalization to 32bit value */
-uint32_t fh32_finalize(fh_u64_t h);
+static inline uint32_t fh32_finalize(uint32_t a, uint32_t b);
 /* convenient function to hash buffer with 32bit seed */
-uint32_t fh32_string_hash(const void *buf, size_t len, uint32_t seed);
+static inline uint32_t fh32_string_hash(const void *buf, size_t len, uint32_t seed);
 /* convenient function to hash buffer with 64bit seed */
-uint32_t fh32_string_hash2(const void *buf, size_t len, uint32_t seed1, uint32_t seed2);
+static inline uint32_t fh32_string_hash2(const void *buf, size_t len, uint32_t seed1, uint32_t seed2);
 
-/* 128bit state for 64bit result */
-typedef ... fh_u128_t;
 /* mix 64bit integer into 128bit state */
-fh_u128_t fh64_permute(fh_u128_t h, uint64_t v);
+static inline void fh64_permute(uint64_t v, uint64_t *a, uint64_t *b);
 /* hash string, seed with and produce 128bit state */
-fh_u128_t fh64_permute_string(fh_u128_t h, const uint8_t *v, size_t len);
+static inline void fh64_permute_string(const uint8_t *v, size_t len, uint64_t *a, uint64_t *b);
 /* state finalization to 64bit value */
-uint64_t fh64_finalize(fh_u128_t h);
+static inline uint64_t  fh64_finalize(uint64_t a, uint64_t b);
 /* convenient function to hash buffer with 64bit seed */
-uint64_t fh64_string_hash(const void *buf, size_t len, uint64_t seed);
+static inline uint64_t  fh64_string_hash(const void *buf, size_t len, uint64_t seed);
 /* convenient function to hash buffer with 128bit seed */
-uint64_t fh64_string_hash2(const void *buf, size_t len, uint64_t seed1, uint64_t seed2);
+static inline uint64_t  fh64_string_hash2(const void *buf, size_t len, uint64_t seed1, uint64_t seed2);
 ````
 
 Benchmark
