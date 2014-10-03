@@ -77,8 +77,8 @@ By 1-20byte substrings twice
 
 function  | gcc -O2 | clang -O2
 ----------|---------|----------
-funny32   |   1.28  |   1.23 
-funny64   |   2.58  |   1.89 
+funny32   |   1.28  |   1.25 
+funny64   |   2.43  |   2.00 
 murmur32  |   1.54  |   1.34 
 murmur128 |   3.31  |   2.94 
 sip24     |   6.40  |   5.02 
@@ -91,7 +91,7 @@ spooky    |   4.17  |   2.83
 function  | gcc -O2 | clang -O2
 ----------|---------|----------
 funny32   |   1.68  |   1.53 
-funny64   |   2.76  |   1.82 
+funny64   |   2.73  |   1.93 
 murmur32  |   1.51  |   1.55 
 murmur128 |   3.12  |   3.13 
 sip24     |   9.05  |  11.18 

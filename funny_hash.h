@@ -122,7 +122,7 @@ fh32_finalize(uint32_t a, uint32_t b)
 static inline uint32_t
 fh32_string_hash(const void* d, size_t len, uint32_t seed)
 {
-	uint32_t a = seed, b = seed;
+	uint32_t a = seed - 1, b = seed;
 	fh32_permute_string((const uint8_t*)d, len, &a, &b);
 	return fh32_finalize(a, b);
 }
@@ -202,7 +202,7 @@ fh64_finalize(uint64_t a, uint64_t b)
 static inline uint64_t
 fh64_string_hash(const void* d, size_t len, uint64_t seed)
 {
-	uint64_t a = seed, b = seed;
+	uint64_t a = seed - 1, b = seed;
 	fh64_permute_string((const uint8_t*)d, len, &a, &b);
 	return fh64_finalize(a, b);
 }
