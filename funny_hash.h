@@ -103,7 +103,7 @@ fh32_permute_string(const uint8_t *v, size_t len, uint32_t *a, uint32_t *b)
 	}
 	t = (uint32_t)len << 24;
 	t |= fh_load_u24(v, len & 3);
-	(*a)--;
+	(*a) ^= 1 << 16;
 	fh32_permute(t, a, b);
 }
 
@@ -122,7 +122,7 @@ fh32_finalize(uint32_t a, uint32_t b)
 static inline uint32_t
 fh32_string_hash(const void* d, size_t len, uint32_t seed)
 {
-	uint32_t a = seed - 1, b = seed;
+	uint32_t a = seed, b = seed ^ (2 << 16);
 	fh32_permute_string((const uint8_t*)d, len, &a, &b);
 	return fh32_finalize(a, b);
 }
@@ -142,7 +142,7 @@ static inline void
 fh64_permute(uint64_t v, uint64_t *a, uint64_t *b)
 {
 #if 0
-	/* referenct formula */
+	/* reference formula */
 	*a = FH_ROTL(*a ^ v, 32) * FH_BC1;
 	*b = (FH_ROTL(*b, 32) ^ v) * FH_BC2;
 #else
@@ -184,7 +184,7 @@ fh64_permute_string(const uint8_t *v, size_t len, uint64_t *a, uint64_t *b)
 	}
 	t = (uint64_t)len << 56;
 	t |= fh_load_u56(v, len & 7);
-	(*a)--;
+	(*a)^=(uint64_t)1 << 32;
 	fh64_permute(t, a, b);
 }
 
@@ -192,8 +192,8 @@ static inline uint64_t
 fh64_finalize(uint64_t a, uint64_t b)
 {
 	uint64_t c, d;
-	c = a ^ ((a >> 32) + (b >> 35));
-	d = b + ((a >> 35) ^ (b >> 32));
+	c = a ^ ((b >> 32) + (a >> 35));
+	d = b + ((b >> 35) ^ (a >> 32));
 	c *= FH_BC1;
 	d *= FH_BC2;
 	return c ^ d ^ (c >> 32) ^ (d >> 33);
@@ -202,7 +202,7 @@ fh64_finalize(uint64_t a, uint64_t b)
 static inline uint64_t
 fh64_string_hash(const void* d, size_t len, uint64_t seed)
 {
-	uint64_t a = seed - 1, b = seed;
+	uint64_t a = seed, b = seed ^ ((uint64_t)2 << 32);
 	fh64_permute_string((const uint8_t*)d, len, &a, &b);
 	return fh64_finalize(a, b);
 }
