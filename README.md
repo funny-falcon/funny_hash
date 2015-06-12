@@ -44,57 +44,61 @@ Some benchmark results on Core-i7 2600 2400MHz 300M random blob:
 x86_64
 ------
 
-By 1-20byte substrings twice
+By 1-14byte substrings twice
 
 function  | gcc -O2 | clang -O2
 ----------|---------|----------
-funny32   |   1.18  |   1.17 
-funny64   |   1.32  |   1.17 
-murmur32  |   1.45  |   1.23 
-murmur128 |   1.80  |   1.64 
-sip24     |   2.72  |   2.29 
-sip13     |   2.34  |   1.88 
-lookup3   |   1.57  |   1.43 
-spooky    |   1.61  |   1.29 
+funny32   |   1.06  |   1.08
+funny64   |   1.02  |   1.03
+fnv1a     |   0.95  |   0.96
+murmur32  |   1.23  |   1.19
+murmur128 |   1.62  |   1.83
+sip24     |   2.46  |   2.33
+sip13     |   2.04  |   1.81
+lookup3   |   1.13  |   1.21
+spooky    |   1.24  |   1.18
 
 10 times 300M at once
 
 function  | gcc -O2 | clang -O2
 ----------|---------|----------
-funny32   |   1.68  |   1.53 
-funny64   |   0.86  |   0.79 
-murmur32  |   1.49  |   1.57 
-murmur128 |   0.72  |   0.89 
-sip24     |   2.45  |   2.41 
-sip13     |   1.31  |   1.28 
-lookup3   |   1.93  |   2.09 
-spooky    |   1.04  |   0.99 
+funny32   |   1.22  |   1.11
+funny64   |   0.62  |   0.58
+fnv1a     |   3.19  |   3.22
+murmur32  |   1.10  |   1.12
+murmur128 |   0.59  |   0.68
+sip24     |   1.76  |   2.28
+sip13     |   0.92  |   0.92
+lookup3   |   1.47  |   1.51
+spooky    |   0.73  |   0.72
 
 x86 (by -m32)
 -------------
 
-By 1-20byte substrings twice
+By 1-14byte substrings twice
 
 function  | gcc -O2 | clang -O2
 ----------|---------|----------
-funny32   |   1.27  |   1.25 
-funny64   |   2.42  |   1.98 
-murmur32  |   1.56  |   1.34 
-murmur128 |   3.36  |   2.93 
-sip24     |   6.45  |   4.99 
-sip13     |   4.68  |   3.50 
-lookup3   |   1.76  |   1.59 
-spooky    |   4.19  |   2.79 
+funny32   |   1.16  |   1.29
+funny64   |   2.18  |   1.79
+fnv1a     |   0.99  |   1.08
+murmur32  |   1.33  |   1.29
+murmur128 |   2.83  |   2.80
+sip24     |   5.39  |   3.87
+sip13     |   3.87  |   3.02
+lookup3   |   1.53  |   1.29
+spooky    |   2.95  |   2.04
 
 10 times 300M at once
 
 function  | gcc -O2 | clang -O2
 ----------|---------|----------
-funny32   |   1.68  |   1.53 
-funny64   |   2.75  |   1.77 
-murmur32  |   1.51  |   1.55 
-murmur128 |   3.12  |   3.13 
-sip24     |   9.07  |  11.18 
-sip13     |   4.88  |   5.37 
-lookup3   |   2.03  |   1.95 
-spooky    |   5.42  |   3.01 
+funny32   |   1.21  |   1.10
+funny64   |   1.92  |   1.98
+fnv1a     |   3.21  |   3.22
+murmur32  |   1.09  |   1.12
+murmur128 |   2.48  |   2.48
+sip24     |   6.12  |   4.55
+sip13     |   3.35  |   2.62
+lookup3   |   1.48  |   1.44
+spooky    |   3.31  |   1.71

@@ -32,7 +32,7 @@ function  | gcc -O2 | clang -O2
 HD
   tab.each do |fun, t|
     t1, t2 = t
-    puts("%-10s| % 6.2f  | % 6.2f " % [fun, t1, t2])
+    puts("%-10s| % 6.2f  | % 6.2f" % [fun, t1, t2])
   end
 end
 
@@ -40,7 +40,7 @@ puts <<HD
 x86_64
 ------
 
-By 1-20byte substrings twice
+By 1-14byte substrings twice
 
 HD
 format(x64p)
@@ -55,7 +55,7 @@ puts <<HD
 x86 (by -m32)
 -------------
 
-By 1-20byte substrings twice
+By 1-14byte substrings twice
 
 HD
 format(x32p)
