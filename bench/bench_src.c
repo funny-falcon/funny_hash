@@ -15,6 +15,7 @@
 #include "others/csiphash.h"
 #include "others/lookup3.h"
 #include "others/spooky-c.h"
+#include "others/fnv.h"
 
 void fill_rand(void* buf, size_t size) {
 	uint64_t var = 1, v;
@@ -52,7 +53,7 @@ step_big(struct by_piece *p, size_t limit) {
 	return p->cnt <= 10;
 }
 
-static const char *kinds[] = {"funny32", "funny64", "murmur32", "murmur128", "sip24", "sip13", "lookup3", "spooky"};
+static const char *kinds[] = {"funny32", "funny64", "murmur32", "murmur128", "sip24", "sip13", "lookup3", "spooky", "fnv1a"};
 static const char *chunks[] = {"piece", "whole"};
 #define arcnt(a) (sizeof(a)/ sizeof(a[0]))
 int main(int argc, char **argv)
@@ -137,6 +138,12 @@ int main(int argc, char **argv)
 			res = spooky_shorthash(src+bp.off, bp.len, res);
 		}
 		printf("\"hash\": \"%08x%08x\",\t", (uint32_t)(res>>32), (uint32_t)res);
+	} else if (strcmp(argv[1], "fnv1a") == 0) {
+		uint32_t res = 0;
+		while (chunk ? step_big(&bp, size) : step_small(&bp, size)) {
+			res = fnv1a(src+bp.off, bp.len, res);
+		}
+		printf("\"hash\": \"%08x\",\t", res);
 	}
 	if (gettimeofday(&tstop, NULL) == -1) {
 		printf("gettimeofday(): %s\n", strerror(errno));
