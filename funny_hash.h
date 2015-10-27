@@ -115,12 +115,11 @@ fh32_permute_string(const uint8_t *v, size_t len, uint32_t *a, uint32_t *b)
 static inline uint32_t
 fh32_finalize(uint32_t a, uint32_t b)
 {
-	uint32_t c, d;
-	c = a ^ ((a >> 16) + (b >> 19));
-	d = b + ((a >> 19) ^ (b >> 16));
-	c *= FH_C1;
-	d *= FH_C2;
-	return c ^ d ^ (c >> 16) ^ (d >> 17);
+	a ^= a >> 17;
+	b ^= b >> 16;
+	a *= FH_C1;
+	b *= FH_C2;
+	return a ^ b ^ (a >> 16) ^ (b >> 17);
 }
 
 static inline uint32_t
@@ -201,12 +200,11 @@ fh64_permute_string(const uint8_t *v, size_t len, uint64_t *a, uint64_t *b)
 static inline uint64_t
 fh64_finalize(uint64_t a, uint64_t b)
 {
-	uint64_t c, d;
-	c = a ^ ((b >> 32) + (a >> 35));
-	d = b + ((b >> 35) ^ (a >> 32));
-	c *= FH_BC1;
-	d *= FH_BC2;
-	return c ^ d ^ (c >> 32) ^ (d >> 33);
+	a ^= a >> 33;
+	b ^= b >> 32;
+	a *= FH_BC1;
+	b *= FH_BC2;
+	return a ^ b ^ (a >> 32) ^ (b >> 33);
 }
 
 static inline uint64_t
