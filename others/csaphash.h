@@ -70,13 +70,13 @@
 
 #define ROUND(v0,v1,v2,v3)		\
 	HALF_ROUND(v0,v1,v2,v3,7,8);		\
-	HALF_ROUND(v2,v1,v0,v3,9,11);
+	HALF_ROUND(v2,v1,v0,v3,9,13);
 
 #define DOUBLE_ROUND(v0,v1,v2,v3)		\
 	HALF_ROUND(v0,v1,v2,v3,7,8);		\
-	HALF_ROUND(v2,v1,v0,v3,9,11);           \
+	HALF_ROUND(v2,v1,v0,v3,9,13);           \
 	HALF_ROUND(v0,v1,v2,v3,7,8);		\
-	HALF_ROUND(v2,v1,v0,v3,9,11);
+	HALF_ROUND(v2,v1,v0,v3,9,13);
 
 
 static inline uint32_t saphash24(const void *src, unsigned long src_sz, const char key[16]) {
@@ -86,10 +86,10 @@ static inline uint32_t saphash24(const void *src, unsigned long src_sz, const ch
 	uint32_t b = (uint32_t)src_sz << 24;
 	const uint32_t *in = (uint32_t*)src;
 
-	uint32_t v0 = k0 ^ 0x736f6d6570736575ULL;
-	uint32_t v1 = k1 ^ 0x326f72616e326f6dULL;
-	uint32_t v2 = k0 ^ 0x6c7967656e657261ULL;
-	uint32_t v3 = k1 ^ 0x7465326279746573ULL;
+	uint32_t v0 = k0 ^ 0x736f6d65UL;
+	uint32_t v1 = k1 ^ 0x326f7261UL;
+	uint32_t v2 = k0 ^ 0x6c796765UL;
+	uint32_t v3 = k1 ^ 0x74653262UL;
 
 	while (src_sz >= 4) {
 		uint32_t mi = _le32toh(*in);
