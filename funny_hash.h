@@ -44,23 +44,13 @@ static inline uint64_t  fh64_string_hash2(const void *buf, size_t len, uint64_t 
 
 static const uint32_t FH_C1 = 0xb8b34b2d;
 static const uint32_t FH_C2 = 0x52c6a2d9;
-/* this function is cause of clang:
- *     on x86_64 it tries to pack fh_u64_t in one 64bit register and work on it.
- * gcc does no such mistake */
+
 static inline void
 fh32_permute(uint32_t v, uint32_t *a, uint32_t *b)
 {
-#if 0
 	/* reference formula */
 	*a = FH_ROTL(*a ^ v, 16) * FH_C1;
 	*b = (FH_ROTL(*b, 16) ^ v) * FH_C2;
-#else
-	/* help clang to reorder instructions */
-	*a ^= v;
-	*b = FH_ROTL(*b, 16);
-	*a = FH_ROTL(*a, 16) * FH_C1;
-	*b = (*b ^ v) * FH_C2;
-#endif
 }
 
 #if FH_READ_UNALIGNED
@@ -140,21 +130,13 @@ fh32_string_hash2(const void* d, size_t len, uint32_t seed1, uint32_t seed2)
 
 static const uint64_t FH_BC1 = U64_CONSTANT(0xacd5ad43274593b9);
 static const uint64_t FH_BC2 = U64_CONSTANT(0x6956abd6ed268a3d);
-/* it looks like clang is not as good at instruction reordering as gcc */
+
 static inline void
 fh64_permute(uint64_t v, uint64_t *a, uint64_t *b)
 {
-#if 0
 	/* reference formula */
 	*a = FH_ROTL(*a ^ v, 32) * FH_BC1;
 	*b = (FH_ROTL(*b, 32) ^ v) * FH_BC2;
-#else
-	/* help clang to reorder instructions */
-	*a ^= v;
-	*b = FH_ROTL(*b, 32);
-	*a = FH_ROTL(*a, 32) * FH_BC1;
-	*b = (*b ^ v) * FH_BC2;
-#endif
 }
 
 #if FH_READ_UNALIGNED

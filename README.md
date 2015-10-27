@@ -49,7 +49,7 @@ By 1-14byte substrings twice
 function  | gcc -O2 | clang -O2
 ----------|---------|----------
 funny32   |   0.97  |   0.96
-funny64   |   0.92  |   1.01
+funny64   |   0.89  |   0.97
 fnv1a     |   0.96  |   0.96
 murmur32  |   1.20  |   1.10
 murmur128 |   1.47  |   1.60
@@ -64,8 +64,8 @@ spooky    |   1.14  |   1.14
 
 function  | gcc -O2 | clang -O2
 ----------|---------|----------
-funny32   |   1.19  |   1.16
-funny64   |   0.69  |   0.67
+funny32   |   1.12  |   1.12
+funny64   |   0.57  |   0.56
 fnv1a     |   3.55  |   3.54
 murmur32  |   1.19  |   1.19
 murmur128 |   0.57  |   0.55
@@ -83,8 +83,8 @@ By 1-14byte substrings twice
 
 function  | gcc -O2 | clang -O2
 ----------|---------|----------
-funny32   |   1.08  |   1.11
-funny64   |   1.74  |   1.64
+funny32   |   1.08  |   1.07
+funny64   |   1.76  |   1.60
 fnv1a     |   1.03  |   1.08
 murmur32  |   1.30  |   1.32
 murmur128 |   2.69  |   2.73
@@ -99,8 +99,8 @@ spooky    |   3.03  |   2.13
 
 function  | gcc -O2 | clang -O2
 ----------|---------|----------
-funny32   |   1.14  |   1.21
-funny64   |   2.05  |   1.31
+funny32   |   1.13  |   1.12
+funny64   |   2.05  |   1.23
 fnv1a     |   3.55  |   3.56
 murmur32  |   1.14  |   1.18
 murmur128 |   2.13  |   2.10
