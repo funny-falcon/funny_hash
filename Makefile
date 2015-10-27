@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-g -g3 -ggdb -ggdb3 -std=gnu99
 COPT=-O2
-OTHERS=others/MurmurHash3.h others/csiphash.h others/lookup3.h others/spooky-c.h
+OTHERS=others/MurmurHash3.h others/csiphash.h others/csaphash.h others/lookup3.h others/spooky-c.h others/fnv.h
 
 ifeq ($(shell uname -p),x86_64)
 all: bench/bench_32 bench/bench_64
