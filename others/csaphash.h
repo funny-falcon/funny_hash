@@ -77,7 +77,7 @@
 	ROUND(v0, v1, v2, v3);
 
 
-static inline uint32_t saphash24(const void *src, unsigned long src_sz, const char key[16]) {
+static inline uint32_t saphash24(const void *src, unsigned long src_sz, const char key[8]) {
 	const uint32_t *_key = (uint32_t *)key;
 	uint32_t k0 = _le32toh(_key[0]);
 	uint32_t k1 = _le32toh(_key[1]);
@@ -113,7 +113,7 @@ static inline uint32_t saphash24(const void *src, unsigned long src_sz, const ch
 	return (v0 ^ v1) ^ (v2 ^ v3);
 }
 
-static inline uint32_t saphash13(const void *src, unsigned long src_sz, const char key[16]) {
+static inline uint32_t saphash13(const void *src, unsigned long src_sz, const char key[8]) {
 	const uint32_t *_key = (uint32_t *)key;
 	uint32_t k0 = _le32toh(_key[0]);
 	uint32_t k1 = _le32toh(_key[1]);
