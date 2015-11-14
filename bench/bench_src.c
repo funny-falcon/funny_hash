@@ -14,6 +14,7 @@
 #include "others/MurmurHash3.h"
 #include "others/csiphash.h"
 #include "others/csaphash.h"
+#include "others/cbobhash.h"
 #include "others/lookup3.h"
 #include "others/spooky-c.h"
 #include "others/fnv.h"
@@ -140,6 +141,30 @@ bench_sap13(int chunk, void *src, size_t size) {
 	printf("\"hash\": \"%08x\",\t", r.kkey[0]);
 }
 static void __attribute__((noinline))
+bench_bob24(int chunk, void *src, size_t size) {
+	struct by_piece bp = {0, 0, 0};
+	union {
+		char key[8];
+		uint32_t kkey[2];
+	} r = {0};
+	while (chunk ? step_big(&bp, size) : step_small(&bp, size)) {
+		r.kkey[0] = bobhash24(src+bp.off, bp.len, r.key);
+	}
+	printf("\"hash\": \"%08x\",\t", r.kkey[0]);
+}
+static void __attribute__((noinline))
+bench_bob13(int chunk, void *src, size_t size) {
+	struct by_piece bp = {0, 0, 0};
+	union {
+		char key[8];
+		uint32_t kkey[2];
+	} r = {0};
+	while (chunk ? step_big(&bp, size) : step_small(&bp, size)) {
+		r.kkey[0] = bobhash13(src+bp.off, bp.len, r.key);
+	}
+	printf("\"hash\": \"%08x\",\t", r.kkey[0]);
+}
+static void __attribute__((noinline))
 bench_lookup3(int chunk, void *src, size_t size) {
 	struct by_piece bp = {0, 0, 0};
 	uint32_t res = 0;
@@ -166,7 +191,7 @@ bench_fnv1a(int chunk, void *src, size_t size) {
 	}
 	printf("\"hash\": \"%08x\",\t", res);
 }
-static const char *kinds[] = {"funny32", "funny64", "murmur32", "murmur128", "sip24", "sip13", "sap24", "sap13", "lookup3", "spooky", "fnv1a"};
+static const char *kinds[] = {"funny32", "funny64", "murmur32", "murmur128", "sip24", "sip13", "sap24", "sap13", "bob24", "bob13", "lookup3", "spooky", "fnv1a"};
 static const char *chunks[] = {"piece", "whole"};
 #define arcnt(a) (sizeof(a)/ sizeof(a[0]))
 int main(int argc, char **argv)
@@ -212,6 +237,10 @@ int main(int argc, char **argv)
 		bench_sap24(chunk, src, size);
 	} else if (strcmp(argv[1], "sap13") == 0) {
 		bench_sap13(chunk, src, size);
+	} else if (strcmp(argv[1], "bob24") == 0) {
+		bench_bob24(chunk, src, size);
+	} else if (strcmp(argv[1], "bob13") == 0) {
+		bench_bob13(chunk, src, size);
 	} else if (strcmp(argv[1], "lookup3") == 0) {
 		bench_lookup3(chunk, src, size);
 	} else if (strcmp(argv[1], "spooky") == 0) {
@@ -232,8 +261,8 @@ int main(int argc, char **argv)
 	printf("\"time\": %d.%02d},\n", (int)tstop.tv_sec, (int)tstop.tv_usec/10000);
 	return 0;
 help:
-	printf("%s (funny32|funny64|murmur32|murmur128|sip24|sip13|sap24|sap13|lookup3|spooky) (piece|whole) worksetsize\n", argv[0]);
-	printf("\tfunny32|funny64|murmur32|murmur128|sip24|sip13|sap24|sap13|lookup3|spooky - function to test\n");
+	printf("%s (funny32|funny64|murmur32|murmur128|sip24|sip13|sap24|sap13|bob24|bob13|lookup3|spooky) (piece|whole) worksetsize\n", argv[0]);
+	printf("\tfunny32|funny64|murmur32|murmur128|sip24|sip13|sap24|sap13|bob24|bob13|lookup3|spooky - function to test\n");
 	printf("\tpiece|whole - whole file at once or by 1-20 byte pieces\n");
 	printf("\t\t(since i don't use incremental implementations, hashsum by pieces will differ\n)");
 	printf("\tworksetsize - size of memory blob to hash\n");

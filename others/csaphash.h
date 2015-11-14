@@ -150,6 +150,7 @@ static inline uint32_t saphash13(const void *src, unsigned long src_sz, const ch
 	return (v0 ^ v1) ^ (v2 ^ v3);
 }
 
+#undef _le32toh
 #undef ROTATE
 #undef ROUND
 #undef HALF_ROUND
