@@ -69,8 +69,8 @@
 	a = ROTATE(a, 16);
 
 #define ROUND(v0,v1,v2,v3)		\
-	HALF_ROUND(v0,v1,v2,v3,7,8);		\
-	HALF_ROUND(v2,v1,v0,v3,9,13);
+	HALF_ROUND(v0,v1,v2,v3,5,8);		\
+	HALF_ROUND(v2,v1,v0,v3,7,13);
 
 #define DOUBLE_ROUND(v0,v1,v2,v3)		\
 	ROUND(v0, v1, v2, v3);                  \
