@@ -1,5 +1,6 @@
 for CC in gcc clang ; do
-	for COPT in -O1 -O2 -O3 ; do
+	#for COPT in -O1 -O2 -O3 ; do
+	for COPT in -O2 -O3 ; do
 		make clean
 		make all CC=$CC COPT=$COPT
 		make bench | tee bench/"$CC""$COPT".json
