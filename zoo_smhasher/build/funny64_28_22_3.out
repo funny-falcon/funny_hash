@@ -1,0 +1,27 @@
+-------------------------------------------------------------------------------
+--- Testing Funny64 "FunnyHash for x86, 64-bit"
+
+[[[ Avalanche Tests ]]]
+
+Testing  24-bit keys ->  64-bit hashes,   300000 reps.......... worst bias is 0.721333%
+Testing  32-bit keys ->  64-bit hashes,   300000 reps.......... worst bias is 0.732000%
+Testing  40-bit keys ->  64-bit hashes,   300000 reps.......... worst bias is 0.699333%
+Testing  48-bit keys ->  64-bit hashes,   300000 reps.......... worst bias is 0.713333%
+Testing  56-bit keys ->  64-bit hashes,   300000 reps.......... worst bias is 0.629333%
+Testing  64-bit keys ->  64-bit hashes,   300000 reps.......... worst bias is 0.647333%
+Testing  72-bit keys ->  64-bit hashes,   300000 reps.......... worst bias is 0.712667%
+Testing  80-bit keys ->  64-bit hashes,   300000 reps.......... worst bias is 0.672667%
+Testing  88-bit keys ->  64-bit hashes,   300000 reps.......... worst bias is 0.654000%
+Testing  96-bit keys ->  64-bit hashes,   300000 reps.......... worst bias is 0.772667%
+Testing 104-bit keys ->  64-bit hashes,   300000 reps.......... worst bias is 0.700000%
+Testing 112-bit keys ->  64-bit hashes,   300000 reps.......... worst bias is 0.730000%
+Testing 120-bit keys ->  64-bit hashes,   300000 reps.......... worst bias is 0.796000%
+Testing 128-bit keys ->  64-bit hashes,   300000 reps.......... worst bias is 0.761333%
+Testing 136-bit keys ->  64-bit hashes,   300000 reps.......... worst bias is 0.713333%
+Testing 144-bit keys ->  64-bit hashes,   300000 reps.......... worst bias is 0.690000%
+Testing 152-bit keys ->  64-bit hashes,   300000 reps.......... worst bias is 0.778000%
+
+
+Input vcode 0x00000001, Output vcode 0x00000001, Result vcode 0x00000001
+Verification value is 0x00000001 - Testing took 149.322419 seconds
+-------------------------------------------------------------------------------
