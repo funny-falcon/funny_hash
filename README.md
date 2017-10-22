@@ -39,7 +39,7 @@ static inline uint64_t  fh64_string_hash2(const void *buf, size_t len, uint64_t 
 Benchmark
 =========
 
-Some benchmark results on Core-i7 4770 3400MHz 300M random blob
+Some benchmark results on Intel CPU 300M random blob
 (time relative to murmur3a, less is better):
 
 x86_64
