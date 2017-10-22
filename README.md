@@ -39,7 +39,8 @@ static inline uint64_t  fh64_string_hash2(const void *buf, size_t len, uint64_t 
 Benchmark
 =========
 
-Some benchmark results on Core-i7 4770 3400MHz 300M random blob:
+Some benchmark results on Core-i7 4770 3400MHz 300M random blob
+(time relative to murmur3a, less is better):
 
 x86_64
 ------
@@ -48,37 +49,33 @@ By 1-14byte substrings twice
 
 function  | gcc -O2 | clang -O2
 ----------|---------|----------
-funny32   |   0.94  |   0.95
-funny64   |   0.90  |   0.94
-fnv1a     |   0.96  |   0.96
-murmur32  |   1.20  |   1.10
-murmur128 |   1.45  |   1.60
-sip24     |   2.02  |   1.88
-sip13     |   1.78  |   1.61
-sap24     |   2.08  |   1.86
-sap13     |   1.71  |   1.51
-bob24     |   1.70  |   1.76
-bob13     |   1.39  |   1.47
-lookup3   |   1.01  |   1.10
-spooky    |   1.13  |   1.12
+funny32   |   0.86  |   0.89
+funny64   |   0.74  |   0.78
+fnv1a     |   0.78  |   0.83
+murmur32  |   1.00  |   1.00
+murmur128 |   1.24  |   1.26
+sip24     |   1.83  |   1.66
+sip13     |   1.57  |   1.41
+sap24     |   1.81  |   1.58
+sap13     |   1.50  |   1.28
+lookup3   |   0.90  |   0.87
+spooky    |   0.98  |   0.90
 
 10 times 300M at once
 
 function  | gcc -O2 | clang -O2
 ----------|---------|----------
-funny32   |   1.12  |   1.12
-funny64   |   0.55  |   0.55
-fnv1a     |   3.53  |   3.53
-murmur32  |   1.12  |   1.12
-murmur128 |   0.45  |   0.50
-sip24     |   1.27  |   1.48
-sip13     |   0.75  |   0.82
-sap24     |   2.53  |   2.95
-sap13     |   1.47  |   1.63
-bob24     |   1.30  |   1.48
-bob13     |   0.74  |   0.82
-lookup3   |   1.19  |   1.10
-spooky    |   0.75  |   0.73
+funny32   |   0.97  |   1.09
+funny64   |   0.49  |   0.55
+fnv1a     |   3.10  |   3.17
+murmur32  |   1.00  |   1.00
+murmur128 |   0.42  |   0.47
+sip24     |   1.16  |   1.35
+sip13     |   0.66  |   0.73
+sap24     |   2.31  |   2.71
+sap13     |   1.31  |   1.46
+lookup3   |   1.06  |   1.00
+spooky    |   0.65  |   0.65
 
 x86 (by -m32)
 -------------
@@ -87,34 +84,30 @@ By 1-14byte substrings twice
 
 function  | gcc -O2 | clang -O2
 ----------|---------|----------
-funny32   |   1.08  |   1.08
-funny64   |   1.67  |   1.60
-fnv1a     |   1.05  |   1.08
-murmur32  |   1.29  |   1.29
-murmur128 |   2.55  |   2.65
-sip24     |   5.13  |   4.02
-sip13     |   3.83  |   3.06
-sap24     |   2.27  |   2.07
-sap13     |   1.94  |   1.68
-bob24     |   1.79  |   1.97
-bob13     |   1.54  |   1.72
-lookup3   |   1.31  |   1.15
-spooky    |   2.91  |   2.16
+funny32   |   0.96  |   0.90
+funny64   |   1.41  |   1.25
+fnv1a     |   0.80  |   0.90
+murmur32  |   1.00  |   1.00
+murmur128 |   1.99  |   2.33
+sip24     |   3.88  |   3.28
+sip13     |   2.89  |   2.31
+sap24     |   1.87  |   1.80
+sap13     |   1.62  |   1.47
+lookup3   |   1.04  |   1.00
+spooky    |   2.27  |   1.55
 
 10 times 300M at once
 
 function  | gcc -O2 | clang -O2
 ----------|---------|----------
-funny32   |   1.12  |   1.12
-funny64   |   2.02  |   1.22
-fnv1a     |   3.53  |   3.53
-murmur32  |   1.12  |   1.12
-murmur128 |   2.07  |   2.03
-sip24     |   5.78  |   4.78
-sip13     |   3.41  |   2.59
-sap24     |   2.62  |   2.95
-sap13     |   1.47  |   1.63
-bob24     |   1.33  |   1.48
-bob13     |   0.77  |   0.82
-lookup3   |   1.19  |   1.10
-spooky    |   3.55  |   1.81
+funny32   |   1.00  |   1.00
+funny64   |   1.80  |   1.12
+fnv1a     |   3.19  |   3.19
+murmur32  |   1.00  |   1.00
+murmur128 |   1.80  |   1.77
+sip24     |   4.97  |   4.60
+sip13     |   2.67  |   1.95
+sap24     |   2.37  |   2.74
+sap13     |   1.35  |   1.47
+lookup3   |   1.09  |   1.05
+spooky    |   2.40  |   1.85

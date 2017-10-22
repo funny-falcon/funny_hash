@@ -26,12 +26,16 @@ x64gccp.each{|f,t| x64p[f] = [t, nil]}
 x64clangp.each{|f,t| x64p[f][1] = t}
 
 def format(tab)
+  murmur32_t = tab.find{|fun, t| fun == 'murmur32'}[1]
+  mt1, mt2 = murmur32_t
   puts <<HD
 function  | gcc -O2 | clang -O2
 ----------|---------|----------
 HD
   tab.each do |fun, t|
     t1, t2 = t
+    t1 /= mt1
+    t2 /= mt2
     puts("%-10s| % 6.2f  | % 6.2f" % [fun, t1, t2])
   end
 end
