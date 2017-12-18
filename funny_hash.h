@@ -175,7 +175,7 @@ static inline uint64_t
 fh64_finalize(uint64_t a, uint64_t b)
 {
 	a ^= (a >> 23) ^ (a >> 40);
-	b ^= (b >> 23) ^ (a >> 40);
+	b ^= (b >> 23) ^ (b >> 40);
 	a *= FH_BC1;
 	b *= FH_BC2;
 	a ^= a >> 32;
